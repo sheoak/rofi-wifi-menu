@@ -20,12 +20,15 @@ LIST=$(nmcli --fields "$FIELDS" device wifi list | sed '/^--/d')
 RWIDTH=$(($(echo "$LIST" | head -n 1 | awk '{print length($0); }')+2))
 # Dynamically change the height of the rofi menu
 LINENUM=$(echo "$LIST" | wc -l)
+let LINENUM+=2
+
 # Gives a list of known connections so we can parse it later
 KNOWNCON=$(nmcli connection show)
 # telling if there is currently a connection (enabled or disabled)
 CONSTATE=$(nmcli r wifi)
 
 CURRSSID=$(iwgetid -r)
+
 
 if [[ ! -z $CURRSSID ]]; then
     HIGHLINE=$(echo  "$(echo "$LIST" | awk -F "[  ]{2,}" '{print $1}' | grep -Fxn -m 1 "$CURRSSID" | awk -F ":" '{print $1}') + 1" | bc ) 
