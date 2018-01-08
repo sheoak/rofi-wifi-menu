@@ -59,10 +59,15 @@ fi
 # If the user inputs "manual" as their SSID in the start window, it will bring them to this screen
 if [ "$CHENTRY" = "manual" ] ; then
     # Manual entry of the SSID and password (if appplicable)
-    MSSID=$(echo "enter the SSID of the network (SSID,password)" | rofi -dmenu -p "Manual Entry: " $ROFI_OPTS)
+    MSSID=$(echo "enter the SSID of the network (SSID,password)" | rofi -dmenu -p "Manual Entry: " -lines 1 $ROFI_OPTS)
     # Separating the password from the entered string
     MPASS=$(echo "$MSSID" | awk -F "," '{print $2}')
 
+    if [[ -z $MSSID ]]; then
+        exit;
+    fi
+
+    # FIXME: connexion logic duplicated, merge with bottom lines
     # If the user entered a manual password, then use the password nmcli command
     if [ "$MPASS" = "" ]; then
         nmcli dev wifi con "$MSSID"
@@ -84,6 +89,7 @@ else
     fi
 
     # Parses the list of preconfigured connections to see if it already contains the chosen SSID. This speeds up the connection process
+    # FIXME: not always working
     if [[ $(echo "$KNOWNCON" | grep "$CHSSID") = "$CHSSID" ]]; then
         nmcli con up "$CHSSID"
     else
@@ -92,6 +98,7 @@ else
 			WIFIPASS=$(rofi -dmenu -no-fixed-num-lines -p "password: " -mesg "if connection is stored, hit enter" $ROFI_OPTS)
 		fi
 
+        # FIXME: merge with previous code one fixed
         if [[ -z $WIFIPASS ]] && [[ $SECURITY ]]; then
             # network regitered already, force connection
             nmcli con up id "$CHSSID"
