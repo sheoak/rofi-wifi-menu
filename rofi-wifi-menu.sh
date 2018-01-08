@@ -8,7 +8,7 @@ SECURITY=0
 
 if [ ! -r "$DIR/config" ]; then
     echo "WARNING: config file not found! Using default values."
-    FIELDS=SSID,SECURITY
+    FIELDS=SSID,SECURITY,BARS
     ROFI_OPTS=
 elif [ -r "$DIR/config" ]; then
     # Get values from config
