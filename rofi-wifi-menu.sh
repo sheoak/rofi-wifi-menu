@@ -9,9 +9,7 @@ SECURITY=0
 if [ ! -r "$DIR/config" ]; then
     echo "WARNING: config file not found! Using default values."
     FIELDS=SSID,SECURITY
-    POSITION=0
-    YOFF=0
-    XOFF=0
+    ROFI_OPTS=
 elif [ -r "$DIR/config" ]; then
     # Get values from config
     source ./config
@@ -48,13 +46,13 @@ elif [[ "$CONSTATE" =~ "disabled" ]]; then
 fi
 
 
-CHENTRY=$(echo -e "$TOGGLE\nmanual\n$LIST" | uniq -u | rofi -dmenu -p "Wi-Fi SSID: " -lines "$LINENUM" -a "$HIGHLINE" -location "$POSITION" -yoffset "$YOFF" -xoffset "$XOFF" -font "DejaVu Sans Mono 8" -width -"$RWIDTH")
+CHENTRY=$(echo -e "$TOGGLE\nmanual\n$LIST" | uniq -u | rofi -dmenu -p "Wi-Fi SSID: " -lines "$LINENUM" -a "$HIGHLINE" $ROFI_OPTS  -width -"$RWIDTH")
 CHSSID=$(echo "$CHENTRY" | sed  's/\s\{2,\}/\|/g' | awk -F "|" '{print $1}')
 
 # If the user inputs "manual" as their SSID in the start window, it will bring them to this screen
 if [ "$CHENTRY" = "manual" ] ; then
     # Manual entry of the SSID and password (if appplicable)
-    MSSID=$(echo "enter the SSID of the network (SSID,password)" | rofi -dmenu -p "Manual Entry: " -font "DejaVu Sans Mono 8" -lines 1)
+    MSSID=$(echo "enter the SSID of the network (SSID,password)" | rofi -dmenu -p "Manual Entry: " $ROFI_OPTS)
     # Separating the password from the entered string
     MPASS=$(echo "$MSSID" | awk -F "," '{print $2}')
 
@@ -84,7 +82,7 @@ else
     else
 		if [[ "$CHENTRY" =~ "WPA1" ]] || [[ "$CHENTRY" =~ "WPA2" ]] || [[ "$CHENTRY" =~ "WEP" ]]; then
             SECURITY=1
-			WIFIPASS=$(rofi -dmenu -no-fixed-num-lines -p "password: " -mesg "if connection is stored, hit enter")
+			WIFIPASS=$(rofi -dmenu -no-fixed-num-lines -p "password: " -mesg "if connection is stored, hit enter" $ROFI_OPTS)
 		fi
 
         if [[ -z $WIFIPASS ]] && [[ $SECURITY ]]; then
