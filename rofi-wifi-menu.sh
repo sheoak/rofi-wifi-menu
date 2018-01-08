@@ -29,8 +29,8 @@ RWIDTH=$(($(echo "$LIST" | head -n 1 | awk '{print length($0); }')+2))
 LINENUM=$(echo "$LIST" | wc -l)
 # Gives a list of known connections so we can parse it later
 KNOWNCON=$(nmcli connection show)
-# Really janky way of telling if there is currently a connection
-CONSTATE=$(nmcli -fields WIFI g)
+# telling if there is currently a connection (enabled or disabled)
+CONSTATE=$(nmcli r wifi)
 
 CURRSSID=$(iwgetid -r)
 
