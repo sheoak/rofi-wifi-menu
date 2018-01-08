@@ -3,4 +3,4 @@
 #fields to be displayed
 FIELDS=SSID,SECURITY,BARS
 #ROFI_OPTS='--no-fixed-num-lines -font "DejaVu Sans Mono 8" -position 5'
-ROFI_OPTS='--no-fixed-num-lines'
+ROFI_OPTS='-no-fixed-num-lines'
