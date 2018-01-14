@@ -12,7 +12,7 @@ if [ ! -r "$DIR/config" ]; then
     ROFI_OPTS=
 elif [ -r "$DIR/config" ]; then
     # Get values from config
-    source ./config
+    source $DIR/config
 fi
 
 LIST=$(nmcli --fields "$FIELDS" device wifi list | sed '/^--/d')
